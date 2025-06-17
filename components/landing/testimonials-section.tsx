@@ -1,69 +1,86 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Star } from "lucide-react";
+import Image from "next/image";
 
 export function TestimonialsSection() {
   const testimonials = [
     {
-      quote:
-        "MercaTerra has transformed my small farm business. I now have direct access to customers who value fresh, local produce.",
-      author: "Maria Rodriguez",
-      role: "Organic Vegetable Farmer",
-      avatar: "MR",
+      name: "Sarah Johnson",
+      role: "Home Chef",
+      content:
+        "The vegetables I get from MercaTerra are incredibly fresh. I can taste the difference!",
+      rating: 5,
+      avatar:
+        "https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=srgb&dpr=1&w=100",
     },
     {
-      quote:
-        "As a chef, I need the freshest ingredients. MercaTerra connects me directly with local farmers for the best quality produce.",
-      author: "James Chen",
+      name: "Mike Chen",
       role: "Restaurant Owner",
-      avatar: "JC",
+      content:
+        "As a restaurant owner, quality is everything. MercaTerra delivers consistent, high-quality produce.",
+      rating: 5,
+      avatar:
+        "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=srgb&dpr=1&w=100",
     },
     {
-      quote:
-        "I love knowing exactly where my food comes from. MercaTerra makes it easy to support local farmers and eat healthier.",
-      author: "Sarah Johnson",
-      role: "Health-Conscious Consumer",
-      avatar: "SJ",
+      name: "Emily Davis",
+      role: "Nutrition Coach",
+      content:
+        "I recommend MercaTerra to all my clients. Fresh, organic, and competitively priced.",
+      rating: 5,
+      avatar:
+        "https://images.pexels.com/photos/1036627/pexels-photo-1036627.jpeg?auto=compress&cs=srgb&dpr=1&w=100",
     },
-  ]
+  ];
 
   return (
-    <section className="container py-12 md:py-24 lg:py-32">
-      <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
-        <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">What Our Users Say</h2>
-        <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-          Hear from farmers and buyers who are already using MercaTerra.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 mt-16 md:grid-cols-3">
-        {testimonials.map((testimonial, index) => (
-          <motion.div
-            key={index}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            viewport={{ once: true }}
-          >
-            <Card>
-              <CardContent className="p-6 flex flex-col gap-4">
-                <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
-                <div className="flex items-center gap-4 mt-4">
-                  <Avatar>
-                    <AvatarFallback>{testimonial.avatar}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="font-medium">{testimonial.author}</p>
-                    <p className="text-sm text-muted-foreground">{testimonial.role}</p>
-                  </div>
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+            What Our Customers Say
+          </h2>
+          <p className="text-xl text-gray-600">
+            Trusted by thousands of satisfied customers
+          </p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <div
+              key={index}
+              className="bg-white p-6 rounded-xl shadow-sm border border-gray-100"
+            >
+              <div className="flex items-center mb-4">
+                {[...Array(testimonial.rating)].map((_, i) => (
+                  <Star
+                    key={i}
+                    className="w-5 h-5 text-yellow-400 fill-current"
+                  />
+                ))}
+              </div>
+              <p className="text-gray-600 mb-6 italic">
+                &quot;{testimonial.content}&quot;
+              </p>
+              <div className="flex items-center">
+                <Image
+                  src={testimonial.avatar}
+                  alt={testimonial.name}
+                  className="w-12 h-12 rounded-full mr-4"
+                  width={400}
+                  height={400}
+                />
+                <div>
+                  <p className="font-semibold text-gray-900">
+                    {testimonial.name}
+                  </p>
+                  <p className="text-gray-500 text-sm">{testimonial.role}</p>
                 </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
-  )
+  );
 }

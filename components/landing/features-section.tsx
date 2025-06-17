@@ -1,67 +1,69 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Leaf, ShoppingBasket, TruckIcon, DollarSign, MessageCircle, BarChart3 } from "lucide-react"
+import {
+  Leaf,
+  Shield,
+  Truck,
+  Users
+} from "lucide-react";
 
 export function FeaturesSection() {
   const features = [
     {
-      icon: <Leaf className="h-10 w-10 text-green-600" />,
-      title: "Direct Farm Connection",
-      description: "Connect directly with local farmers and cut out the middlemen.",
+      icon: <Leaf className="w-8 h-8 text-green-600" />,
+      title: "Fresh & Organic",
+      description:
+        "Direct from farm to your table. Get the freshest produce without any middlemen.",
     },
     {
-      icon: <ShoppingBasket className="h-10 w-10 text-green-600" />,
-      title: "Fresh Produce",
-      description: "Get access to the freshest local produce, harvested at peak ripeness.",
+      icon: <Users className="w-8 h-8 text-green-600" />,
+      title: "Support Local Farmers",
+      description:
+        "Connect directly with local farmers and support your community's agriculture.",
     },
     {
-      icon: <TruckIcon className="h-10 w-10 text-green-600" />,
-      title: "Flexible Delivery",
-      description: "Choose between convenient delivery or farm pickup options.",
+      icon: <Truck className="w-8 h-8 text-green-600" />,
+      title: "Fast Delivery",
+      description:
+        "Quick and reliable delivery from farm to your doorstep within 24-48 hours.",
     },
     {
-      icon: <DollarSign className="h-10 w-10 text-green-600" />,
-      title: "Fair Pricing",
-      description: "Farmers set their own prices, and buyers pay fair market rates.",
+      icon: <Shield className="w-8 h-8 text-green-600" />,
+      title: "Quality Guaranteed",
+      description:
+        "Every product is quality-checked and comes with our freshness guarantee.",
     },
-    {
-      icon: <MessageCircle className="h-10 w-10 text-green-600" />,
-      title: "Direct Communication",
-      description: "Message farmers directly with questions about their products.",
-    },
-    {
-      icon: <BarChart3 className="h-10 w-10 text-green-600" />,
-      title: "Sales Analytics",
-      description: "Farmers get insights into their sales performance and customer preferences.",
-    },
-  ]
+  ];
 
   return (
-    <section className="container py-12 md:py-24 lg:py-32">
-      <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
-        <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">Features that make a difference</h2>
-        <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-          MercaTerra provides tools for both farmers and buyers to create a sustainable local food ecosystem.
+    <section className="py-20 bg-white">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+          Why Choose MercaTerra?
+        </h2>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          We connect you directly with local farmers, ensuring the freshest
+          produce and supporting your community.
         </p>
       </div>
-
-      <div className="grid grid-cols-1 gap-8 mt-16 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         {features.map((feature, index) => (
-          <motion.div
+          <div
             key={index}
-            className="flex flex-col items-center gap-2 rounded-lg border bg-card p-6 text-card-foreground shadow-sm transition-all hover:shadow-md"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: index * 0.1 }}
-            viewport={{ once: true }}
+            className="text-center p-6 rounded-xl hover:bg-gray-50 transition-colors"
           >
-            <div className="mb-4 rounded-full bg-muted p-2">{feature.icon}</div>
-            <h3 className="text-xl font-bold">{feature.title}</h3>
-            <p className="text-center text-muted-foreground">{feature.description}</p>
-          </motion.div>
+            <div className="flex justify-center mb-4">{feature.icon}</div>
+            <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              {feature.title}
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              {feature.description}
+            </p>
+          </div>
         ))}
       </div>
-    </section>
-  )
+    </div>
+  </section>
+  );
 }

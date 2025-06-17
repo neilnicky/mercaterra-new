@@ -1,70 +1,59 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { UserPlus, ListPlus, ShoppingCart, Truck } from "lucide-react"
 
 export function HowItWorksSection() {
-  const steps = [
-    {
-      icon: <UserPlus className="h-10 w-10 text-green-600" />,
-      title: "Create an account",
-      description: "Sign up as a farmer or buyer to get started on MercaTerra.",
-    },
-    {
-      icon: <ListPlus className="h-10 w-10 text-green-600" />,
-      title: "List or browse products",
-      description: "Farmers list their products, while buyers browse the marketplace.",
-    },
-    {
-      icon: <ShoppingCart className="h-10 w-10 text-green-600" />,
-      title: "Place orders",
-      description: "Buyers select products and place orders directly with farmers.",
-    },
-    {
-      icon: <Truck className="h-10 w-10 text-green-600" />,
-      title: "Delivery or pickup",
-      description: "Choose between delivery or pickup options for your fresh produce.",
-    },
-  ]
+  
 
   return (
-    <section className="container py-12 md:py-24 lg:py-32 bg-muted/50">
-      <div className="mx-auto flex max-w-[58rem] flex-col items-center justify-center gap-4 text-center">
-        <h2 className="font-heading text-3xl leading-[1.1] sm:text-3xl md:text-5xl">How MercaTerra Works</h2>
-        <p className="max-w-[85%] leading-normal text-muted-foreground sm:text-lg sm:leading-7">
-          Our platform makes it easy to connect farmers with buyers in just a few simple steps.
-        </p>
-      </div>
-
-      <div className="relative mt-16">
-        <div className="absolute left-1/2 h-full w-0.5 -translate-x-1/2 bg-border hidden md:block"></div>
-
-        <div className="space-y-8 md:space-y-16">
-          {steps.map((step, index) => (
-            <motion.div
-              key={index}
-              className="relative flex flex-col md:flex-row items-center gap-4 md:gap-8"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-              viewport={{ once: true }}
-            >
-              <div className={`flex w-full md:w-1/2 ${index % 2 === 0 ? "md:justify-end" : "md:order-1"}`}>
-                <div className="flex flex-col items-center md:items-start gap-2 p-4">
-                  <h3 className="text-xl font-bold">{step.title}</h3>
-                  <p className="text-center md:text-left text-muted-foreground">{step.description}</p>
-                </div>
+    <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+              How It Works
+            </h2>
+            <p className="text-xl text-gray-600">
+              Simple steps to get farm-fresh produce delivered to your door
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                1
               </div>
-
-              <div className="z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-background shadow-md">
-                {step.icon}
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Browse Products
+              </h3>
+              <p className="text-gray-600">
+                Explore fresh produce from local farmers in your area. Filter by
+                organic, price, and location.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                2
               </div>
-
-              <div className={`hidden w-1/2 md:block ${index % 2 === 0 ? "md:order-1" : ""}`}></div>
-            </motion.div>
-          ))}
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Place Order
+              </h3>
+              <p className="text-gray-600">
+                Add items to your cart and checkout securely. Choose your
+                preferred delivery time.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="bg-green-600 text-white w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+                3
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                Enjoy Fresh Food
+              </h3>
+              <p className="text-gray-600">
+                Receive fresh produce at your doorstep within 24-48 hours. Enjoy
+                farm-to-table quality!
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
   )
 }
