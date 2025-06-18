@@ -23,7 +23,8 @@ export default function FarmerDashboard() {
             Farmer Dashboard
           </h1>
           <p className="text-gray-600">
-            Welcome back, {user} Here&apos;s how your digital farm is performing.
+            Welcome back, {user} Here&apos;s how your digital farm is
+            performing.
           </p>
         </div>
 
@@ -61,7 +62,7 @@ export default function FarmerDashboard() {
               </h2>
               <div className="space-y-3">
                 <Link
-                  href="farmer/product-management"
+                  href="product-management"
                   className="w-full flex items-center justify-between p-4 bg-green-50 text-green-700 rounded-lg hover:bg-green-100 transition-colors"
                 >
                   <div className="flex items-center">
@@ -70,7 +71,7 @@ export default function FarmerDashboard() {
                   </div>
                 </Link>
                 <Link
-                  href="farmer/orders"
+                  href="orders"
                   className="w-full flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                 >
                   <div className="flex items-center">
