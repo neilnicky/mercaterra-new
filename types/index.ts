@@ -36,13 +36,12 @@ export interface Order {
   id: string;
   buyerId: string;
   farmerId: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: OrderStatus;
-  createdAt: string;
-  updatedAt: Date;
-  buyer?: User;
-  farmer?: User;
+  products: CartItem[];
+  total: number;
+  status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
+  orderDate: string;
+  deliveryDate?: string;
+  shippingAddress: string;
 }
 
 export interface OrderItem {
@@ -73,7 +72,6 @@ export interface Message {
 }
 
 export interface CartItem {
-  productId: string;
-  quantity: number;
   product: Product;
+  quantity: number;
 }

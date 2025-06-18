@@ -70,7 +70,7 @@ export default function FarmerDashboard() {
                   </div>
                 </Link>
                 <Link
-                  href="orders"
+                  href="farmer/orders"
                   className="w-full flex items-center justify-between p-4 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100 transition-colors"
                 >
                   <div className="flex items-center">
