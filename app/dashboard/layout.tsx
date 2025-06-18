@@ -22,7 +22,7 @@ export default function DashboardLayout({
           <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 md:sticky md:block">
             <DashboardNav />
           </aside> */}
-        <main className="flex w-full flex-col overflow-hidden py-6">
+        <main className="flex w-full flex-col overflow-hidden py-">
           {children}
         </main>
       </div>
