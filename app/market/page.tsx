@@ -1,338 +1,276 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Search, Filter, Grid, List } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { Card } from "@/components/ui/card"
-import { ProductCard } from "@/components/market/product-card"
-import { SiteHeader } from "@/components/landing/site-header"
-import { SiteFooter } from "@/components/landing/site-footer"
+import ProductCard from "@/components/market/product-card";
+import { mockProducts } from "@/constants/mockData";
+import { Product } from "@/types";
+import { Grid, List, Search, SlidersHorizontal } from "lucide-react";
+import React, { useState } from "react";
 
-// Mock product data
-const mockProducts = [
-  {
-    id: "1",
-    title: "Organic Tomatoes",
-    description: "Fresh, vine-ripened organic tomatoes grown without pesticides",
-    price: 4.99,
-    quantity: 50,
-    unit: "lb",
-    category: "Vegetables",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    farmerId: "farmer1",
-    farmer: {
-      id: "farmer1",
-      name: "Green Valley Farm",
-      region: "California",
-      rating: 4.8,
-    },
-    availability: true,
-    pickupAvailable: true,
-    deliveryAvailable: true,
-    tags: ["organic", "local", "fresh"],
-  },
-  {
-    id: "2",
-    title: "Fresh Strawberries",
-    description: "Sweet, juicy strawberries picked this morning",
-    price: 6.99,
-    quantity: 25,
-    unit: "lb",
-    category: "Fruits",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    farmerId: "farmer2",
-    farmer: {
-      id: "farmer2",
-      name: "Berry Fields Farm",
-      region: "Oregon",
-      rating: 4.9,
-    },
-    availability: true,
-    pickupAvailable: true,
-    deliveryAvailable: false,
-    tags: ["fresh", "sweet", "local"],
-  },
-  {
-    id: "3",
-    title: "Free-Range Eggs",
-    description: "Farm-fresh eggs from happy, free-range chickens",
-    price: 5.99,
-    quantity: 100,
-    unit: "dozen",
-    category: "Dairy & Eggs",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    farmerId: "farmer3",
-    farmer: {
-      id: "farmer3",
-      name: "Sunrise Poultry",
-      region: "Texas",
-      rating: 4.7,
-    },
-    availability: true,
-    pickupAvailable: true,
-    deliveryAvailable: true,
-    tags: ["free-range", "fresh", "protein"],
-  },
-  {
-    id: "4",
-    title: "Organic Lettuce",
-    description: "Crisp, fresh organic lettuce perfect for salads",
-    price: 2.99,
-    quantity: 30,
-    unit: "head",
-    category: "Vegetables",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    farmerId: "farmer1",
-    farmer: {
-      id: "farmer1",
-      name: "Green Valley Farm",
-      region: "California",
-      rating: 4.8,
-    },
-    availability: true,
-    pickupAvailable: true,
-    deliveryAvailable: true,
-    tags: ["organic", "crisp", "salad"],
-  },
-  {
-    id: "5",
-    title: "Raw Honey",
-    description: "Pure, unprocessed honey from local beehives",
-    price: 12.99,
-    quantity: 15,
-    unit: "jar",
-    category: "Pantry",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    farmerId: "farmer4",
-    farmer: {
-      id: "farmer4",
-      name: "Golden Hive Apiary",
-      region: "Vermont",
-      rating: 5.0,
-    },
-    availability: true,
-    pickupAvailable: true,
-    deliveryAvailable: true,
-    tags: ["raw", "natural", "sweet"],
-  },
-  {
-    id: "6",
-    title: "Grass-Fed Beef",
-    description: "Premium grass-fed beef, ethically raised",
-    price: 18.99,
-    quantity: 20,
-    unit: "lb",
-    category: "Meat",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    farmerId: "farmer5",
-    farmer: {
-      id: "farmer5",
-      name: "Prairie Cattle Ranch",
-      region: "Montana",
-      rating: 4.6,
-    },
-    availability: true,
-    pickupAvailable: false,
-    deliveryAvailable: true,
-    tags: ["grass-fed", "premium", "ethical"],
-  },
-]
+interface MarketFeedProps {
+  onAddToCart: (product: Product) => void;
+}
 
-const categories = ["All", "Vegetables", "Fruits", "Dairy & Eggs", "Meat", "Pantry"]
-const regions = ["All", "California", "Oregon", "Texas", "Vermont", "Montana"]
+export default function MarketFeed({ onAddToCart }: MarketFeedProps) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [priceRange, setPriceRange] = useState("All");
+  const [sortBy, setSortBy] = useState("newest");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [showFilters, setShowFilters] = useState(false);
 
-export default function MarketPage() {
-  const [products, setProducts] = useState(mockProducts)
-  const [filteredProducts, setFilteredProducts] = useState(mockProducts)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [selectedRegion, setSelectedRegion] = useState("All")
-  const [sortBy, setSortBy] = useState("name")
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
-  const [showFilters, setShowFilters] = useState(false)
+  const categories = [
+    "All",
+    "Vegetables",
+    "Fruits",
+    "Dairy & Eggs",
+    "Grains",
+    "Herbs",
+  ];
+  const priceRanges = ["All", "Under $5", "$5-$10", "$10-$20", "Over $20"];
+  const sortOptions = [
+    { value: "newest", label: "Newest First" },
+    { value: "price-low", label: "Price: Low to High" },
+    { value: "price-high", label: "Price: High to Low" },
+    { value: "rating", label: "Highest Rated" },
+    { value: "popular", label: "Most Popular" },
+  ];
 
-  // Filter and search products
-  useEffect(() => {
-    let filtered = products
+  const filteredProducts = mockProducts.filter((product) => {
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory =
+      selectedCategory === "All" || product.category === selectedCategory;
 
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (product) =>
-          product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.farmer.name.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    }
-
-    // Category filter
-    if (selectedCategory !== "All") {
-      filtered = filtered.filter((product) => product.category === selectedCategory)
-    }
-
-    // Region filter
-    if (selectedRegion !== "All") {
-      filtered = filtered.filter((product) => product.farmer.region === selectedRegion)
-    }
-
-    // Sort products
-    filtered = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "price-low":
-          return a.price - b.price
-        case "price-high":
-          return b.price - a.price
-        case "rating":
-          return b.farmer.rating - a.farmer.rating
-        case "name":
-        default:
-          return a.title.localeCompare(b.title)
+    let matchesPrice = true;
+    if (priceRange !== "All") {
+      const price = product.price;
+      switch (priceRange) {
+        case "Under $5":
+          matchesPrice = price < 5;
+          break;
+        case "$5-$10":
+          matchesPrice = price >= 5 && price <= 10;
+          break;
+        case "$10-$20":
+          matchesPrice = price > 10 && price <= 20;
+          break;
+        case "Over $20":
+          matchesPrice = price > 20;
+          break;
       }
-    })
+    }
 
-    setFilteredProducts(filtered)
-  }, [products, searchQuery, selectedCategory, selectedRegion, sortBy])
+    return matchesSearch && matchesCategory && matchesPrice;
+  });
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortBy) {
+      case "price-low":
+        return a.price - b.price;
+      case "price-high":
+        return b.price - a.price;
+      case "rating":
+        return b.rating - a.rating;
+      case "popular":
+        return b.reviewCount - a.reviewCount;
+      default:
+        return (
+          new Date(b.harvestDate).getTime() - new Date(a.harvestDate).getTime()
+        );
+    }
+  });
 
   return (
-    <div className="min-h-screen bg-background">
-      <SiteHeader />
-
-      <main className="container py-8">
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold tracking-tight mb-2">Fresh Local Marketplace</h1>
-          <p className="text-muted-foreground">Discover fresh, local produce directly from farmers in your area</p>
-        </div>
-
-        {/* Search and Filters */}
-        <div className="mb-6 space-y-4">
-          <div className="flex flex-col sm:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search products, farmers, or descriptions..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Button variant="outline" onClick={() => setShowFilters(!showFilters)} className="sm:w-auto">
-              <Filter className="mr-2 h-4 w-4" />
-              Filters
-            </Button>
-          </div>
-
-          {/* Quick Filters */}
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Badge
-                key={category}
-                variant={selectedCategory === category ? "default" : "secondary"}
-                className="cursor-pointer"
-                onClick={() => setSelectedCategory(category)}
-              >
-                {category}
-              </Badge>
-            ))}
-          </div>
-
-          {/* Advanced Filters */}
-          {showFilters && (
-            <Card className="p-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Region</label>
-                  <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {regions.map((region) => (
-                        <SelectItem key={region} value={region}>
-                          {region}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">Sort by</label>
-                  <Select value={sortBy} onValueChange={setSortBy}>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="name">Name</SelectItem>
-                      <SelectItem value="price-low">Price: Low to High</SelectItem>
-                      <SelectItem value="price-high">Price: High to Low</SelectItem>
-                      <SelectItem value="rating">Farmer Rating</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <label className="text-sm font-medium mb-2 block">View</label>
-                  <div className="flex gap-2">
-                    <Button
-                      variant={viewMode === "grid" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setViewMode("grid")}
-                    >
-                      <Grid className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={viewMode === "list" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setViewMode("list")}
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          )}
-        </div>
-
-        {/* Results */}
-        <div className="mb-4 flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
-            Showing {filteredProducts.length} of {products.length} products
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Fresh Market
+          </h1>
+          <p className="text-gray-600">
+            Discover fresh, local produce from farmers in your area
           </p>
         </div>
 
-        {/* Products Grid/List */}
-        <div
-          className={
-            viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" : "space-y-4"
-          }
-        >
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} viewMode={viewMode} />
-          ))}
+        {/* Search and Filters */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4">
+            {/* Search */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search for products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Filter Toggle */}
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="lg:hidden flex items-center justify-center px-4 py-3 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50"
+            >
+              <SlidersHorizontal className="w-5 h-5 mr-2" />
+              Filters
+            </button>
+
+            {/* View Mode Toggle */}
+            <div className="flex border border-gray-200 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`px-4 py-3 flex items-center ${
+                  viewMode === "grid"
+                    ? "bg-green-50 text-green-600"
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                <Grid className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`px-4 py-3 flex items-center border-l border-gray-200 ${
+                  viewMode === "list"
+                    ? "bg-green-50 text-green-600"
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                <List className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Filters Row */}
+          <div
+            className={`${
+              showFilters ? "block" : "hidden lg:block"
+            } mt-4 pt-4 border-t border-gray-100`}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              {/* Category Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Category
+                </label>
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  {categories.map((category) => (
+                    <option key={category} value={category}>
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price Filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Price Range
+                </label>
+                <select
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  {priceRanges.map((range) => (
+                    <option key={range} value={range}>
+                      {range}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Sort */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Sort By
+                </label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                >
+                  {sortOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Clear Filters */}
+              <div className="flex items-end">
+                <button
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCategory("All");
+                    setPriceRange("All");
+                    setSortBy("newest");
+                  }}
+                  className="w-full px-4 py-2 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Empty State */}
-        {filteredProducts.length === 0 && (
+        {/* Results Header */}
+        <div className="flex items-center justify-between mb-6">
+          <p className="text-gray-600">
+            Showing {sortedProducts.length} of {mockProducts.length} products
+          </p>
+        </div>
+
+        {/* Products Grid */}
+        {sortedProducts.length > 0 ? (
+          <div
+            className={
+              viewMode === "grid"
+                ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                : "space-y-4"
+            }
+          >
+            {sortedProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={onAddToCart}
+                variant={viewMode === "list" ? "compact" : "default"}
+              />
+            ))}
+          </div>
+        ) : (
           <div className="text-center py-12">
-            <h3 className="text-lg font-medium mb-2">No products found</h3>
-            <p className="text-muted-foreground mb-4">Try adjusting your search or filter criteria</p>
-            <Button
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search className="w-8 h-8 text-gray-400" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              No products found
+            </h3>
+            <p className="text-gray-600 mb-4">
+              Try adjusting your search criteria or filters
+            </p>
+            <button
               onClick={() => {
-                setSearchQuery("")
-                setSelectedCategory("All")
-                setSelectedRegion("All")
+                setSearchTerm("");
+                setSelectedCategory("All");
+                setPriceRange("All");
               }}
+              className="text-green-600 hover:text-green-700 font-medium"
             >
-              Clear Filters
-            </Button>
+              Clear all filters
+            </button>
           </div>
         )}
-      </main>
-
-      <SiteFooter />
+      </div>
     </div>
-  )
+  );
 }

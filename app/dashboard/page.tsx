@@ -187,7 +187,7 @@ export default async function Dashboard() {
 
   if (role === "farmer") redirect("/dashboard/farmer");
   if (role === "buyer") redirect("/dashboard/buyer");
-  if (role === "admin") redirect("/dashboard/admin");
+  // if (role === "admin") redirect("/dashboard/admin");
 
   redirect("/unauthorized");
 }
